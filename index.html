@@ -170,7 +170,7 @@ section{margin-top:34px}
 .pc .pt{font-family:var(--mono);font-size:14px;font-variant-numeric:tabular-nums;white-space:nowrap}
 .pc .pt.proj{color:var(--muted);font-size:12.5px}
 .pc .pt.zero{color:var(--muted)}
-.rk{display:inline-block;font-family:var(--display);font-weight:700;font-size:10px;line-height:1;padding:2px 4px;border-radius:2px;background:var(--accent);color:var(--accent-ink);margin-left:5px;vertical-align:1px}
+.rkb{display:inline-block;font-family:var(--display);font-weight:700;font-size:10px;line-height:1;padding:2px 4px;border-radius:2px;background:var(--accent);color:var(--accent-ink);margin-left:5px;vertical-align:1px}
 .chip{display:inline-block;font-family:var(--display);font-weight:700;font-size:10px;letter-spacing:.06em;line-height:1;padding:2px 5px;border-radius:2px;margin-left:5px;vertical-align:1px}
 .chip.in{background:var(--good);color:#fff}.chip.out{background:var(--bad);color:#fff}
 .sb{justify-self:center;font-family:var(--display);font-weight:700;font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:#fff;padding:3px 0;width:44px;text-align:center;border-radius:3px;background:var(--muted)}
@@ -239,7 +239,7 @@ footer a{color:inherit}
           <li>Put him in the legal slot whose current starter has the <b>lowest projection</b>, so the team gives up as little as possible on paper.</li>
           <li>Re-score the line-up with the <b>real points</b> both players actually scored, and re-run the head-to-head.</li>
         </ol>
-        <p>A "rookie" is a player in his first NFL season — Sleeper's <span class="num">years_exp = 0</span> <i>and</i> a rookie year of this season, so a long-serving practice-squad player doesn't count — marked <span class="rk" style="margin-left:0">R</span> in the line-ups. Players on IR aren't available to start and are ignored. Scoring uses the league's own settings, including the TE premium. Nothing here is a projection of the result — it's what the scoreboard would have read.</p>
+        <p>A "rookie" is a player in his first NFL season — Sleeper's <span class="num">years_exp = 0</span> <i>and</i> a rookie year of this season, so a long-serving practice-squad player doesn't count — marked <span class="rkb" style="margin-left:0">R</span> in the line-ups. Players on IR aren't available to start and are ignored. Scoring uses the league's own settings, including the TE premium. Nothing here is a projection of the result — it's what the scoreboard would have read.</p>
       </div>
     </section>
   </div>
@@ -469,7 +469,7 @@ var SHADOW = (function(){
     var proj = (wk.info[pid]||{}).proj;
     var ptTxt = played ? '<div class="pt'+(pts===0?' zero':'')+'">'+f2(pts)+'</div>'
                        : '<div class="pt proj">'+(proj===undefined?'—':f2(proj))+'</div>';
-    var who = '<div class="who"><div class="pn">'+esc(abbr(p.name))+(p.rookie?'<span class="rk" title="rookie">R</span>':'')+(chip||'')+'</div><div class="pm">'+esc(p.pos)+(p.team?' · '+esc(p.team):'')+'</div></div>';
+    var who = '<div class="who"><div class="pn">'+esc(abbr(p.name))+(p.rookie?'<span class="rkb" title="rookie">R</span>':'')+(chip||'')+'</div><div class="pm">'+esc(p.pos)+(p.team?' · '+esc(p.team):'')+'</div></div>';
     return '<div class="pc '+side+'">'+(side==='r' ? ptTxt+who : who+ptTxt)+'</div>';
   }
   function lineupFor(r, rule){
