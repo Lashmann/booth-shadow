@@ -13,7 +13,8 @@
   color-scheme:light dark;
   --bg:#F3F4F7; --surface:#FFFFFF; --surface-2:#E8EBF1; --text:#131C2B; --muted:#5D6B80; --line:#D8DDE6;
   --accent:#A66F0C; --accent-ink:#FFFFFF; --good:#2A7F4F; --bad:#BE3F27; --good-bg:#E3F2E9; --bad-bg:#FBE7E2;
-  --flip:#A66F0C; --flip-bg:#FBF0D6;
+  --flip:#A66F0C; --flip-bg:#FBF0D6; --hi:#FFF6DF;
+  --qb:#C2417A; --rb:#1F8A70; --wr:#2E6FD6; --te:#D07A1F; --fx:#6B5BD6;
   --display:"Barlow Condensed","Arial Narrow","Helvetica Neue",Arial,sans-serif;
   --body:"Source Sans 3","Segoe UI",Helvetica,Arial,sans-serif;
   --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
@@ -22,18 +23,21 @@
   :root:not([data-theme="light"]){
     --bg:#0F1A2B; --surface:#172538; --surface-2:#1E2F47; --text:#EEF1F5; --muted:#8E9BB0; --line:#263650;
     --accent:#F2B640; --accent-ink:#0F1A2B; --good:#4CB87A; --bad:#EA6A50; --good-bg:#17342A; --bad-bg:#3B221D;
-    --flip:#F2B640; --flip-bg:#3A2E12;
+    --flip:#F2B640; --flip-bg:#3A2E12; --hi:#2C2A1C;
+    --qb:#E86AA6; --rb:#3FB596; --wr:#6A9BF0; --te:#F0A050; --fx:#9B8DF0;
   }
 }
 :root[data-theme="dark"]{
   --bg:#0F1A2B; --surface:#172538; --surface-2:#1E2F47; --text:#EEF1F5; --muted:#8E9BB0; --line:#263650;
   --accent:#F2B640; --accent-ink:#0F1A2B; --good:#4CB87A; --bad:#EA6A50; --good-bg:#17342A; --bad-bg:#3B221D;
-  --flip:#F2B640; --flip-bg:#3A2E12;
+  --flip:#F2B640; --flip-bg:#3A2E12; --hi:#2C2A1C;
+  --qb:#E86AA6; --rb:#3FB596; --wr:#6A9BF0; --te:#F0A050; --fx:#9B8DF0;
 }
 *{box-sizing:border-box}
 html,body{margin:0}
 body{background:var(--bg);color:var(--text);font-family:var(--body);font-size:15px;line-height:1.45;
   padding-inline:16px;padding-block:0 48px;-webkit-text-size-adjust:100%}
+body.locked{overflow:hidden}
 .wrap{max-width:1040px;margin:0 auto}
 h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;line-height:1.05}
 .num{font-family:var(--mono);font-variant-numeric:tabular-nums}
@@ -53,7 +57,7 @@ h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;line-height:1.05}
 
 /* verdict */
 .verdict{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-top:22px}
-.tile{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:14px 16px 12px}
+.tile{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:14px 16px 12px;min-width:0}
 .tile .v{font-family:var(--display);font-weight:700;font-size:40px;line-height:1}
 .tile .l{color:var(--muted);font-size:13px;margin-top:6px}
 .tile.hot{border-color:var(--accent)}
@@ -69,19 +73,20 @@ section{margin-top:34px}
 /* ladders */
 .ladders{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 @media (max-width:700px){.ladders{grid-template-columns:1fr}}
-.ladder{background:var(--surface);border:1px solid var(--line);border-radius:6px;overflow:hidden}
+.ladder{background:var(--surface);border:1px solid var(--line);border-radius:6px;overflow:hidden;min-width:0}
 .ladder .cap{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:var(--surface-2);border-bottom:1px solid var(--line)}
 .ladder .cap h3{font-size:18px;font-weight:700;text-transform:uppercase;letter-spacing:.04em}
 .ladder.shadow .cap h3{color:var(--accent)}
-.ladder table{width:100%;border-collapse:collapse}
+.ladder table{width:100%;border-collapse:collapse;table-layout:fixed}
 .ladder th{font-family:var(--display);font-weight:600;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);text-align:right;padding:6px 8px;border-bottom:1px solid var(--line)}
 .ladder th:nth-child(2),.ladder td:nth-child(2){text-align:left}
 .ladder td{padding:7px 8px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
 .ladder tr:last-child td{border-bottom:0}
-.ladder td.rk{color:var(--muted);width:2.2em;font-family:var(--mono);font-size:12px}
-.ladder td.tm{font-family:var(--display);font-weight:600;font-size:16px;letter-spacing:.01em;max-width:0;width:60%;white-space:normal}
+.ladder col.c-rk{width:2.4em}.ladder col.c-wl{width:4.2em}.ladder col.c-pf{width:5.4em}.ladder col.c-mv{width:3.4em}
+.ladder td.rk{color:var(--muted);font-family:var(--mono);font-size:12px}
+.ladder td.tm{font-family:var(--display);font-weight:600;font-size:16px;letter-spacing:.01em;white-space:normal;overflow-wrap:anywhere}
 .ladder td.tm small{display:block;font-family:var(--body);font-weight:400;font-size:12px;color:var(--muted);letter-spacing:0}
-.ladder td.mv{width:3.2em;font-family:var(--mono);font-size:12px}
+.ladder td.mv{font-family:var(--mono);font-size:12px}
 .mv.up{color:var(--good)}.mv.dn{color:var(--bad)}.mv.eq{color:var(--muted)}
 .ladder td.pf{font-family:var(--mono);font-size:13px}
 .ladder tr.playoff-line td{border-bottom:2px dashed var(--accent)}
@@ -90,16 +95,18 @@ section{margin-top:34px}
 .tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
 .tab{font-family:var(--display);font-weight:600;font-size:14px;letter-spacing:.04em;text-transform:uppercase;padding:6px 12px;border:1px solid var(--line);border-radius:4px;background:var(--surface);color:var(--text);cursor:pointer}
 .tab[aria-selected="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
-.tab:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.tab:focus-visible,.game:focus-visible,.dd-close:focus-visible,.jump:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .wk-sum{display:flex;gap:16px 26px;flex-wrap:wrap;color:var(--muted);font-size:13px;margin-bottom:12px}
 .wk-sum b{color:var(--text);font-family:var(--mono);font-weight:500}
-.games{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:12px}
-.game{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:12px 14px;position:relative}
+.games{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(320px,100%),1fr));gap:12px}
+.game{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:12px 14px 30px;position:relative;min-width:0;cursor:pointer;text-align:left;font:inherit;color:inherit;width:100%}
+.game:hover{border-color:var(--accent)}
 .game.flipped{border-color:var(--flip);box-shadow:0 0 0 2px var(--flip-bg) inset}
 .game .badge{position:absolute;top:-9px;right:12px}
-.g-row{display:grid;grid-template-columns:1fr auto;gap:8px 12px;align-items:center;padding:6px 0}
+.game .more{position:absolute;right:14px;bottom:9px;font-family:var(--display);font-weight:600;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+.g-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px 12px;align-items:center;padding:6px 0}
 .g-row + .g-row{border-top:1px solid var(--line)}
-.g-name{font-family:var(--display);font-weight:600;font-size:18px;letter-spacing:.01em;min-width:0}
+.g-name{font-family:var(--display);font-weight:600;font-size:18px;letter-spacing:.01em;min-width:0;overflow-wrap:anywhere}
 .g-name .mgr{font-family:var(--body);font-weight:400;font-size:12px;color:var(--muted);display:block}
 .g-name .win{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--accent);margin-right:6px;vertical-align:middle;position:relative;top:-1px}
 .g-name .win.lost{background:transparent;border:1px solid var(--line)}
@@ -114,6 +121,62 @@ section{margin-top:34px}
 .d.up{background:var(--good-bg);color:var(--good)}.d.dn{background:var(--bad-bg);color:var(--bad)}.d.eq{background:var(--surface-2);color:var(--muted)}
 .g-move .ok{color:var(--good)}
 .slot{font-family:var(--display);font-weight:600;font-size:11px;letter-spacing:.06em;text-transform:uppercase;padding:1px 5px;border:1px solid var(--line);border-radius:3px;color:var(--muted)}
+
+/* drill-down: the long bar */
+.dd{position:fixed;inset:0;z-index:50;background:rgba(8,14,26,.55);display:flex;justify-content:center;align-items:stretch}
+.dd-panel{background:var(--bg);color:var(--text);width:100%;max-width:600px;height:100%;overflow-y:auto;overscroll-behavior:contain;box-shadow:0 0 40px rgba(0,0,0,.35);
+  padding-bottom:calc(32px + env(safe-area-inset-bottom,0px))}
+.dd-head{position:sticky;top:0;z-index:2;background:var(--surface);border-bottom:2px solid var(--accent);padding:calc(10px + env(safe-area-inset-top,0px)) 14px 10px}
+.dd-top{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:8px}
+.dd-top .eyebrow{color:var(--muted)}
+.dd-close{font:inherit;font-family:var(--display);font-weight:700;font-size:14px;letter-spacing:.06em;text-transform:uppercase;background:var(--surface-2);color:var(--text);border:1px solid var(--line);border-radius:4px;padding:5px 10px;cursor:pointer}
+.dd-teams{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:center}
+.dd-teams .tn{font-family:var(--display);font-weight:700;font-size:20px;line-height:1.05;letter-spacing:.01em;min-width:0;overflow-wrap:anywhere}
+.dd-teams .tn small{display:block;font-family:var(--body);font-weight:400;font-size:12px;color:var(--muted)}
+.dd-teams .tn.r{text-align:right}
+.dd-teams .vs{font-family:var(--display);font-weight:600;font-size:12px;color:var(--muted);letter-spacing:.08em}
+.dd-scores{margin-top:8px;display:grid;grid-template-columns:auto 1fr auto 1fr;gap:4px 10px;align-items:center;font-family:var(--mono);font-size:14px}
+.dd-scores .lbl{font-family:var(--display);font-weight:600;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.dd-scores .lbl.rule{color:var(--accent)}
+.dd-scores .s{text-align:right}.dd-scores .s.l{text-align:left}
+.dd-scores .s.w{font-weight:500}
+.dd-scores .s.w::before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--accent);margin:0 6px 1px 0}
+.dd-scores .s.l.w::before{display:none}
+.dd-scores .s.l.w::after{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--accent);margin:0 0 1px 6px}
+.dd-scores .flipnote{grid-column:1/-1;font-size:12px;color:var(--flip);font-family:var(--body);font-weight:600}
+.jumps{display:flex;gap:6px;margin-top:10px}
+.jump{flex:1;font:inherit;font-family:var(--display);font-weight:600;font-size:13px;letter-spacing:.05em;text-transform:uppercase;padding:6px 8px;border:1px solid var(--line);border-radius:4px;background:var(--surface);color:var(--text);cursor:pointer;text-align:center}
+.jump.rule{color:var(--accent);border-color:var(--accent)}
+.dd-set{padding:18px 14px 0}
+.dd-set h3{font-size:22px;font-weight:700;text-transform:uppercase;letter-spacing:.03em;margin-bottom:4px}
+.dd-set h3.rule{color:var(--accent)}
+.dd-set .why{font-size:13px;color:var(--muted);margin:0 0 12px;line-height:1.4}
+.dd-set .why b{color:var(--text)}
+.dd-set .why + .why{margin-top:-6px}
+.grp{font-family:var(--display);font-weight:600;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);display:grid;grid-template-columns:1fr auto 1fr;padding:10px 0 6px;border-bottom:1px solid var(--line)}
+.grp .r{text-align:right}
+.prow{display:grid;grid-template-columns:minmax(0,1fr) 44px minmax(0,1fr);gap:0 8px;align-items:center;padding:7px 0;border-bottom:1px solid var(--line)}
+.prow.hi{background:var(--hi);margin-inline:-14px;padding-inline:14px;border-left:3px solid var(--accent);border-right:3px solid transparent}
+.prow.hi.r-side{border-left-color:transparent;border-right-color:var(--accent)}
+.prow.hi.both{border-left-color:var(--accent);border-right-color:var(--accent)}
+.pc{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:center;min-width:0}
+.pc.r{grid-template-columns:auto minmax(0,1fr)}
+.pc .who{min-width:0}
+.pc.r .who{text-align:right}
+.pc .pn{font-family:var(--display);font-weight:600;font-size:16px;letter-spacing:.01em;line-height:1.1;overflow-wrap:anywhere}
+.pc .pn.empty{color:var(--muted);font-weight:600}
+.pc .pm{font-size:11.5px;color:var(--muted);margin-top:1px}
+.pc .pt{font-family:var(--mono);font-size:14px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.pc .pt.proj{color:var(--muted);font-size:12.5px}
+.pc .pt.zero{color:var(--muted)}
+.rk{display:inline-block;font-family:var(--display);font-weight:700;font-size:10px;line-height:1;padding:2px 4px;border-radius:2px;background:var(--accent);color:var(--accent-ink);margin-left:5px;vertical-align:1px}
+.chip{display:inline-block;font-family:var(--display);font-weight:700;font-size:10px;letter-spacing:.06em;line-height:1;padding:2px 5px;border-radius:2px;margin-left:5px;vertical-align:1px}
+.chip.in{background:var(--good);color:#fff}.chip.out{background:var(--bad);color:#fff}
+.sb{justify-self:center;font-family:var(--display);font-weight:700;font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:#fff;padding:3px 0;width:44px;text-align:center;border-radius:3px;background:var(--muted)}
+.sb.QB{background:var(--qb)}.sb.RB{background:var(--rb)}.sb.WR{background:var(--wr)}.sb.TE{background:var(--te)}
+.sb.FLEX,.sb.SUPER_FLEX,.sb.REC_FLEX,.sb.WRRB_FLEX{background:var(--fx)}
+.sb.BN,.sb.IR{background:var(--surface-2);color:var(--muted);border:1px solid var(--line)}
+.dd-foot{padding:16px 14px 0;color:var(--muted);font-size:12px;font-family:var(--mono)}
 
 /* method + states */
 .method{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:16px 18px;max-width:72ch}
@@ -131,7 +194,7 @@ section{margin-top:34px}
 @media (prefers-reduced-motion:reduce){.spin{animation:none}}
 footer{margin-top:40px;color:var(--muted);font-size:12px;font-family:var(--mono)}
 footer a{color:inherit}
-@media (max-width:480px){.hdr h1{font-size:36px}.tile .v{font-size:34px}.status{text-align:left}}
+@media (max-width:480px){.hdr h1{font-size:36px}.tile .v{font-size:34px}.status{text-align:left}.pc .pn{font-size:15px}.dd-teams .tn{font-size:18px}}
 </style>
 </head>
 <body>
@@ -159,7 +222,7 @@ footer a{color:inherit}
     </section>
 
     <section>
-      <div class="sec-h"><h2>Week by week</h2><span class="note">Tap a week. Scores show <span class="num">actual → under the rule</span>.</span></div>
+      <div class="sec-h"><h2>Week by week</h2><span class="note">Tap a week, then tap a matchup for both full line-ups.</span></div>
       <div class="tabs" id="tabs" role="tablist"></div>
       <div class="wk-sum" id="wk-sum"></div>
       <div class="games" id="games"></div>
@@ -175,7 +238,7 @@ footer a{color:inherit}
           <li>Put him in the legal slot whose current starter has the <b>lowest projection</b>, so the team gives up as little as possible on paper.</li>
           <li>Re-score the line-up with the <b>real points</b> both players actually scored, and re-run the head-to-head.</li>
         </ol>
-        <p>A "rookie" is a player in his first NFL season (Sleeper's <span class="num">years_exp = 0</span>). Players on IR aren't available to start and are ignored. Scoring uses the league's own settings, including the TE premium. Nothing here is a projection of the result — it's what the scoreboard would have read.</p>
+        <p>A "rookie" is a player in his first NFL season — Sleeper's <span class="num">years_exp = 0</span> <i>and</i> a rookie year of this season, so a long-serving practice-squad player doesn't count — marked <span class="rk" style="margin-left:0">R</span> in the line-ups. Players on IR aren't available to start and are ignored. Scoring uses the league's own settings, including the TE premium. Nothing here is a projection of the result — it's what the scoreboard would have read.</p>
       </div>
     </section>
   </div>
@@ -184,6 +247,8 @@ footer a{color:inherit}
 
   <footer>Source: Sleeper public API, league <span id="lid"></span>. Recomputed live on every open — nothing stored, nothing to maintain.</footer>
 </div>
+
+<div class="dd" id="dd" hidden role="dialog" aria-modal="true" aria-labelledby="dd-title"><div class="dd-panel" id="dd-panel"></div></div>
 
 <script id="compute">
 /* ---- pure computation: no DOM in here, so it can be verified in Node ---- */
@@ -203,15 +268,19 @@ var SHADOW = (function(){
     if (pos==='TE' && sc.bonus_rec_te) t += (stats.rec||0)*sc.bonus_rec_te;
     return t;
   }
-  function indexProj(list, sc){
+  function indexProj(list, sc, season){
     var idx = {};
     list.forEach(function(r){
       var p = r.player||{}; var pid = String(r.player_id||p.player_id||'');
       if(!pid) return;
       var pos = p.position||'';
       var fpos = (p.fantasy_positions && p.fantasy_positions.length) ? p.fantasy_positions : [pos];
+      // first-year player: zero accrued seasons AND a rookie year of this season — a practice-squad
+      // veteran can sit on years_exp 0 for years and is not what the league means by "rookie"
+      var ry = p.metadata && p.metadata.rookie_year;
+      var rookie = p.years_exp===0 && (!ry || String(ry)===String(season));
       idx[pid] = { name:((p.first_name||'')+' '+(p.last_name||'')).trim()||('#'+pid), pos:pos, fpos:fpos,
-                   team:p.team||'FA', years_exp:p.years_exp, proj:projPts(r.stats||{}, sc, pos) };
+                   team:p.team||'FA', years_exp:p.years_exp, rookie:rookie, proj:projPts(r.stats||{}, sc, pos) };
     });
     return idx;
   }
@@ -219,10 +288,12 @@ var SHADOW = (function(){
   function computeWeek(w, mus, P, ctx){
     var SLOTS = ctx.SLOTS, reserve = ctx.reserve;
     function get(pid){ return P[pid]; }
-    function isRk(pid){ var p = get(pid); return !!p && p.years_exp===0; }
+    function isRk(pid){ var p = get(pid); return !!p && p.rookie; }
+    var info = {};
     var rows = mus.map(function(m){
       var starters = (m.starters||[]).slice(0, SLOTS.length);
       var all = m.players||[]; var pp = m.players_points||{};
+      all.forEach(function(pid){ var p = get(pid); if (p) info[pid] = { name:p.name, pos:p.pos, team:p.team, rookie:p.rookie, proj:p.proj }; });
       var actual = +(m.points||0);
       var ir = reserve[m.roster_id]||[];
       var startedRk = starters.filter(function(s){ return s && s!=='0' && isRk(s); });
@@ -243,13 +314,14 @@ var SHADOW = (function(){
         });
         if (!best) reason = 'noslot';
         else { reason = 'forced';
-          swap = { inId:rk, outId:best.out, slot:best.slot, slotShort:SLOT_SHORT[best.slot]||best.slot,
+          swap = { idx:best.i, inId:rk, outId:best.out, slot:best.slot, slotShort:SLOT_SHORT[best.slot]||best.slot,
                    inName:rp.name, inPos:rp.pos, outName: best.out ? (get(best.out)||{}).name||('#'+best.out) : null,
                    inProj:rp.proj, outProj:best.outProj, inAct:(+pp[rk]||0), outAct:best.outAct };
         }
       }
       var shadow = actual + (swap ? swap.inAct - swap.outAct : 0);
       return { rid:m.roster_id, mid:m.matchup_id, actual:actual, shadow:shadow, swap:swap, reason:reason,
+               starters:starters, players:all, pp:pp,
                rookieStarted: startedRk.map(function(s){ return (get(s)||{}).name||('#'+s); }) };
     });
     var by = {}; rows.forEach(function(r){ (by[r.mid] = by[r.mid]||[]).push(r); });
@@ -257,10 +329,10 @@ var SHADOW = (function(){
       var a = pr[0], b = pr[1];
       var rw = a.actual===b.actual ? null : (a.actual>b.actual ? a.rid : b.rid);
       var sw = a.shadow===b.shadow ? null : (a.shadow>b.shadow ? a.rid : b.rid);
-      return { a:a, b:b, realWinner:rw, shadowWinner:sw, flipped: rw!==sw };
+      return { mid:a.mid, a:a, b:b, realWinner:rw, shadowWinner:sw, flipped: rw!==sw };
     });
     var played = rows.some(function(r){ return r.actual>0; });
-    return { week:w, rows:rows, games:games, played:played };
+    return { week:w, rows:rows, games:games, played:played, info:info };
   }
 
   function ladder(weeks, through, teams, key, winKey){
@@ -307,8 +379,9 @@ var SHADOW = (function(){
       return Promise.all([ j(CFG.api+'/v1/league/'+CFG.league+'/matchups/'+w), j(projUrl(season,w)) ]);
     }));
     var ctx = { SLOTS:SLOTS, reserve:reserve };
-    var weeks = weekNos.map(function(w,i){ return computeWeek(w, fetched[i][0], indexProj(fetched[i][1], sc), ctx); });
-    // an in-flight week that has kicked off counts as complete-so-far for display, not for the ladder
+    var weeks = weekNos.map(function(w,i){ return computeWeek(w, fetched[i][0], indexProj(fetched[i][1], sc, season), ctx); });
+    // names/positions for every player seen in any week (a player with no projection one week usually has one another week)
+    var names = {}; weeks.forEach(function(wk){ Object.keys(wk.info).forEach(function(pid){ names[pid] = wk.info[pid]; }); });
     var real = ladder(weeks, through, teams, 'actual', 'realWinner');
     var shadow = ladder(weeks, through, teams, 'shadow', 'shadowWinner');
 
@@ -327,12 +400,12 @@ var SHADOW = (function(){
     var rankReal = {}, rankShadow = {}; real.forEach(function(r){ rankReal[r.rid]=r.rank; }); shadow.forEach(function(r){ rankShadow[r.rid]=r.rank; });
     var moved = Object.keys(teams).filter(function(rid){ return rankReal[rid]!==rankShadow[rid]; }).length;
 
-    return { league:lg, teams:teams, SLOTS:SLOTS, season:season, lastReg:lastReg, cur:cur, inFlight:inFlight, through:through,
+    return { league:lg, teams:teams, reserve:reserve, names:names, SLOTS:SLOTS, season:season, lastReg:lastReg, cur:cur, inFlight:inFlight, through:through,
              weeks:weeks, real:real, shadow:shadow, rankReal:rankReal, rankShadow:rankShadow, mismatch:mismatch,
              summary:{ flips:flips, games:games, forced:forced, net:net, moved:moved, teams:Object.keys(teams).length, weeks:done.length },
              playoffTeams: (lg.settings && lg.settings.playoff_teams) || 6, at:new Date() };
   }
-  return { run:run, CFG:CFG };
+  return { run:run, CFG:CFG, SLOT_SHORT:SLOT_SHORT };
 })();
 </script>
 
@@ -341,12 +414,14 @@ var SHADOW = (function(){
   var $ = function(id){ return document.getElementById(id); };
   var esc = function(s){ return String(s).replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); };
   var f1 = function(n){ return (Math.round(n*100)/100).toFixed(2).replace(/0$/,''); };
+  var f2 = function(n){ return (Math.round(n*100)/100).toFixed(2); };
   var sgn = function(n){ var s = f1(Math.abs(n)); return n>0.004 ? '+'+s : n<-0.004 ? '−'+s : '0'; };
   var cls = function(n){ return n>0.004 ? 'up' : n<-0.004 ? 'dn' : 'eq'; };
-  var D;
+  var abbr = function(name){ var p = name.split(' '); if (p.length<2) return name; var f = p[0]; return (f.indexOf('.')>=0 ? f : f.charAt(0)+'.')+' '+p.slice(1).join(' '); };
+  var D, lastFocus = null;
 
   function ladderHtml(rows, key, other){
-    var h = '<table><thead><tr><th>#</th><th>Team</th><th>W-L</th><th>PF</th>'+(key==='shadow'?'<th>Move</th>':'')+'</tr></thead><tbody>';
+    var h = '<table><colgroup><col class="c-rk"><col><col class="c-wl"><col class="c-pf">'+(key==='shadow'?'<col class="c-mv">':'')+'</colgroup><thead><tr><th>#</th><th>Team</th><th>W-L</th><th>PF</th>'+(key==='shadow'?'<th>Move</th>':'')+'</tr></thead><tbody>';
     rows.forEach(function(r,i){
       var t = D.teams[r.rid]; var wl = r.w+'-'+r.l+(r.t?'-'+r.t:'');
       var mv = '';
@@ -371,7 +446,7 @@ var SHADOW = (function(){
     var played = wk.played;
     return wk.games.map(function(g){
       var flipped = played && g.flipped;
-      var h = '<div class="game'+(flipped?' flipped':'')+'">'+(flipped?'<span class="pill flip badge">Result flips</span>':'');
+      var h = '<button type="button" class="game'+(flipped?' flipped':'')+'" data-w="'+wk.week+'" data-m="'+g.mid+'" aria-label="Open full line-ups">'+(flipped?'<span class="pill flip badge">Result flips</span>':'');
       [g.a,g.b].forEach(function(r){
         var t = D.teams[r.rid];
         var won = played && g.shadowWinner===r.rid, lostMark = played && g.shadowWinner!==null && !won;
@@ -381,9 +456,99 @@ var SHADOW = (function(){
         else h += '<div class="g-sc"><span class="was">not started</span></div>';
         h += '<div class="g-move">'+moveHtml(r, played)+'</div></div>';
       });
-      return h+'</div>';
+      return h+'<span class="more">Full line-ups ›</span></button>';
     }).join('');
   }
+
+  /* ---------- drill-down ---------- */
+  function pinfo(pid){ return D.names[pid] || { name:'#'+pid, pos:'', team:'', rookie:false }; }
+  function pcell(pid, side, wk, r, chip){
+    if (!pid || pid==='0') return '<div class="pc '+side+'"><div class="who"><div class="pn empty">Empty</div></div><div class="pt zero">—</div></div>';
+    var p = pinfo(pid), pts = +(r.pp[pid]||0), played = wk.played;
+    var proj = (wk.info[pid]||{}).proj;
+    var ptTxt = played ? '<div class="pt'+(pts===0?' zero':'')+'">'+f2(pts)+'</div>'
+                       : '<div class="pt proj">'+(proj===undefined?'—':f2(proj))+'</div>';
+    var who = '<div class="who"><div class="pn">'+esc(abbr(p.name))+(p.rookie?'<span class="rk" title="rookie">R</span>':'')+(chip||'')+'</div><div class="pm">'+esc(p.pos)+(p.team?' · '+esc(p.team):'')+'</div></div>';
+    return '<div class="pc '+side+'">'+(side==='r' ? ptTxt+who : who+ptTxt)+'</div>';
+  }
+  function lineupFor(r, rule){
+    var st = r.starters.slice();
+    var bench = r.players.filter(function(p){ return st.indexOf(p)<0 && (D.reserve[r.rid]||[]).indexOf(p)<0; });
+    var ir = r.players.filter(function(p){ return (D.reserve[r.rid]||[]).indexOf(p)>=0; });
+    var inId = null, outId = null;
+    if (rule && r.swap){
+      inId = r.swap.inId; outId = r.swap.outId;
+      st[r.swap.idx] = inId;
+      bench = bench.filter(function(p){ return p!==inId; });
+      if (outId) bench.unshift(outId);
+    }
+    if (!(rule && r.swap && outId)) bench.sort(function(a,b){ return (+(r.pp[b]||0))-(+(r.pp[a]||0)); });
+    else { var rest = bench.slice(1).sort(function(a,b){ return (+(r.pp[b]||0))-(+(r.pp[a]||0)); }); bench = [outId].concat(rest); }
+    return { st:st, bench:bench, ir:ir, inId:inId, outId:outId };
+  }
+  function setHtml(wk, g, rule){
+    var A = lineupFor(g.a, rule), B = lineupFor(g.b, rule);
+    var h = '';
+    // starters
+    h += '<div class="grp"><span>Starters</span><span></span><span class="r">Starters</span></div>';
+    D.SLOTS.forEach(function(slot,i){
+      var la = A.st[i], lb = B.st[i];
+      var hiA = rule && A.inId && la===A.inId, hiB = rule && B.inId && lb===B.inId;
+      var cl = 'prow'+(hiA||hiB ? ' hi'+(hiA&&hiB?' both':hiB?' r-side':'') : '');
+      h += '<div class="'+cl+'">'+pcell(la,'l',wk,g.a,hiA?'<span class="chip in">In</span>':'')+'<span class="sb '+esc(slot)+'">'+esc(SHADOW.SLOT_SHORT[slot]||slot)+'</span>'+pcell(lb,'r',wk,g.b,hiB?'<span class="chip in">In</span>':'')+'</div>';
+    });
+    // bench
+    var n = Math.max(A.bench.length, B.bench.length);
+    if (n){ h += '<div class="grp"><span>Bench</span><span></span><span class="r">Bench</span></div>';
+      for (var k=0;k<n;k++){
+        var ba = A.bench[k], bb = B.bench[k];
+        var oa = rule && A.outId && ba===A.outId, ob = rule && B.outId && bb===B.outId;
+        var cl2 = 'prow'+(oa||ob ? ' hi'+(oa&&ob?' both':ob?' r-side':'') : '');
+        h += '<div class="'+cl2+'">'+pcell(ba,'l',wk,g.a,oa?'<span class="chip out">Out</span>':'')+'<span class="sb BN">BN</span>'+pcell(bb,'r',wk,g.b,ob?'<span class="chip out">Out</span>':'')+'</div>';
+      } }
+    // IR
+    var m = Math.max(A.ir.length, B.ir.length);
+    if (m){ h += '<div class="grp"><span>Injured reserve</span><span></span><span class="r">Injured reserve</span></div>';
+      for (var q=0;q<m;q++) h += '<div class="prow">'+pcell(A.ir[q],'l',wk,g.a)+'<span class="sb IR">IR</span>'+pcell(B.ir[q],'r',wk,g.b)+'</div>'; }
+    return h;
+  }
+  function whyLine(r, wk){
+    var t = D.teams[r.rid];
+    if (r.reason==='started') return '<p class="why"><b>'+esc(t.name)+':</b> started a rookie ('+esc(r.rookieStarted.join(', '))+') — no change.</p>';
+    if (r.reason==='none') return '<p class="why"><b>'+esc(t.name)+':</b> no rookie on the roster — the rule can\'t apply.</p>';
+    if (r.reason==='noslot') return '<p class="why"><b>'+esc(t.name)+':</b> no legal slot for the available rookie — no change.</p>';
+    var s = r.swap, d = s.inAct-s.outAct;
+    if (!wk.played) return '<p class="why"><b>'+esc(t.name)+':</b> must start '+esc(s.inName)+' (proj '+f1(s.inProj)+')'+(s.outName?' in place of '+esc(s.outName)+' (proj '+f1(s.outProj)+')':' in an empty slot')+' at '+esc(s.slotShort)+'.</p>';
+    return '<p class="why"><b>'+esc(t.name)+':</b> '+esc(s.inName)+' ('+f1(s.inAct)+') in'+(s.outName?' for '+esc(s.outName)+' ('+f1(s.outAct)+')':' to an empty slot')+' at '+esc(s.slotShort)+' <span class="d '+cls(d)+'">'+sgn(d)+'</span></p>';
+  }
+  function openGame(w, mid, push){
+    var wk = D.weeks.filter(function(x){ return x.week===w; })[0]; if(!wk) return;
+    var g = wk.games.filter(function(x){ return String(x.mid)===String(mid); })[0]; if(!g) return;
+    var ta = D.teams[g.a.rid], tb = D.teams[g.b.rid], played = wk.played;
+    var tag = w===D.inFlight ? (played ? 'Live' : 'Not started') : 'Final';
+    var sc = function(lbl, cl, key, win){
+      return '<span class="lbl '+cl+'">'+lbl+'</span><span class="s l'+(played&&win===g.a.rid?' w':'')+'">'+(played?f2(g.a[key]):'—')+'</span><span class="vs" style="font-size:11px;color:var(--muted)">v</span><span class="s'+(played&&win===g.b.rid?' w':'')+'">'+(played?f2(g.b[key]):'—')+'</span>';
+    };
+    var head = '<div class="dd-head"><div class="dd-top"><span class="eyebrow" id="dd-title">Week '+w+' · '+tag+'</span><button type="button" class="dd-close" id="dd-close">Close ×</button></div>'
+      + '<div class="dd-teams"><div class="tn">'+esc(ta.name)+(ta.mgr&&ta.mgr!==ta.name?'<small>'+esc(ta.mgr)+'</small>':'')+'</div><span class="vs">VS</span><div class="tn r">'+esc(tb.name)+(tb.mgr&&tb.mgr!==tb.name?'<small>'+esc(tb.mgr)+'</small>':'')+'</div></div>'
+      + '<div class="dd-scores">'+sc('As it was','','actual',g.realWinner)+sc('Rookie rule','rule','shadow',g.shadowWinner)+(played&&g.flipped?'<span class="flipnote">Result flips under the rule</span>':'')+'</div>'
+      + '<div class="jumps"><button type="button" class="jump" data-to="dd-was">As it was</button><button type="button" class="jump rule" data-to="dd-rule">Under the rule</button></div></div>';
+    var was = '<div class="dd-set" id="dd-was"><h3>As it was</h3><p class="why">The line-ups as they were set'+(played?' and the points they scored.':'. Points shown are Sleeper projections until kick-off.')+'</p>'+setHtml(wk,g,false)+'</div>';
+    var rule = '<div class="dd-set" id="dd-rule"><h3 class="rule">Under the rookie rule</h3>'+whyLine(g.a,wk)+whyLine(g.b,wk)+setHtml(wk,g,true)+'</div>';
+    $('dd-panel').innerHTML = head+was+rule+'<div class="dd-foot">Same players, same points, same week — only the line-up moves. IR as currently set on Sleeper.</div>';
+    $('dd').hidden = false; document.body.classList.add('locked'); $('dd-panel').scrollTop = 0;
+    lastFocus = document.activeElement; $('dd-close').focus();
+    $('dd-close').addEventListener('click', closeGame);
+    Array.prototype.forEach.call($('dd-panel').querySelectorAll('.jump'), function(b){ b.addEventListener('click', function(){ var el = $(b.dataset.to); if(el) el.scrollIntoView({behavior:'smooth',block:'start'}); }); });
+    if (push!==false) try { history.replaceState(null,'','#w'+w+'-m'+mid); } catch(e){}
+  }
+  function closeGame(){
+    $('dd').hidden = true; document.body.classList.remove('locked'); $('dd-panel').innerHTML = '';
+    try { history.replaceState(null,'',location.pathname+location.search); } catch(e){}
+    if (lastFocus && lastFocus.focus) lastFocus.focus();
+  }
+  $('dd').addEventListener('click', function(e){ if (e.target===$('dd')) closeGame(); });
+  document.addEventListener('keydown', function(e){ if (e.key==='Escape' && !$('dd').hidden) closeGame(); });
 
   function showWeek(w){
     var wk = D.weeks.filter(function(x){ return x.week===w; })[0]; if(!wk) return;
@@ -395,6 +560,7 @@ var SHADOW = (function(){
     $('wk-sum').innerHTML = '<span>Week '+w+' '+tag+'</span><span>Forced to change: <b>'+forced+'</b> of '+wk.rows.length+'</span>'
       + (wk.played ? '<span>Results that flip: <b>'+flips+'</b> of '+wk.games.length+'</span><span>League points swing: <b>'+sgn(net)+'</b></span>' : '<span>Moves shown by projection until kick-off</span>');
     $('games').innerHTML = gamesHtml(wk);
+    Array.prototype.forEach.call($('games').querySelectorAll('.game'), function(b){ b.addEventListener('click', function(){ openGame(+b.dataset.w, b.dataset.m); }); });
     try { localStorage.setItem('booth-shadow-week', String(w)); } catch(e){}
   }
 
@@ -408,7 +574,7 @@ var SHADOW = (function(){
       '<div class="tile hot"><div class="v">'+S.flips+'<span style="font-size:.5em;color:var(--muted)"> / '+S.games+'</span></div><div class="l">results that flip</div></div>'
     + '<div class="tile"><div class="v">'+S.moved+'<span style="font-size:.5em;color:var(--muted)"> / '+S.teams+'</span></div><div class="l">teams change ladder position</div></div>'
     + '<div class="tile"><div class="v">'+S.forced+'</div><div class="l">line-ups forced to change ('+S.weeks+' wk'+(S.weeks===1?'':'s')+')</div></div>'
-    + '<div class="tile"><div class="v '+cls(S.net)+'" style="color:var(--'+(cls(S.net)==='up'?'good':cls(S.net)==='dn'?'bad':'muted')+')">'+sgn(S.net)+'</div><div class="l">league-wide points swing</div></div>';
+    + '<div class="tile"><div class="v" style="color:var(--'+(cls(S.net)==='up'?'good':cls(S.net)==='dn'?'bad':'muted')+')">'+sgn(S.net)+'</div><div class="l">league-wide points swing</div></div>';
 
     var line;
     if (S.weeks===0) line = 'No completed weeks yet — the shadow ladder starts once week 1 is final.';
@@ -423,15 +589,18 @@ var SHADOW = (function(){
 
     var tabs = $('tabs'); tabs.innerHTML = '';
     D.weeks.forEach(function(wk){
-      var b = document.createElement('button'); b.className = 'tab'; b.type = 'button'; b.role = 'tab'; b.dataset.w = wk.week; b.id = 'tab-w'+wk.week;
+      var b = document.createElement('button'); b.className = 'tab'; b.type = 'button'; b.setAttribute('role','tab'); b.dataset.w = wk.week; b.id = 'tab-w'+wk.week;
       b.textContent = 'Wk '+wk.week + (wk.week===D.inFlight ? (wk.played?' · live':' · next') : '');
       b.addEventListener('click', function(){ showWeek(wk.week); });
       tabs.appendChild(b);
     });
     var start = D.through || D.cur || 1;
+    var deep = /^#w(\d+)-m(\d+)$/.exec(location.hash||'');
     try { var saved = +localStorage.getItem('booth-shadow-week'); if (saved && D.weeks.some(function(x){ return x.week===saved; })) start = saved; } catch(e){}
+    if (deep) start = +deep[1];
     if (D.weeks.length) showWeek(start);
     $('app').hidden = false;
+    if (deep) openGame(+deep[1], deep[2], false);
   }
 
   function fail(e){
